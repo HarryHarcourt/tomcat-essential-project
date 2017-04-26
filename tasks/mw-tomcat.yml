@@ -1,0 +1,99 @@
+---
+- name: Install Java 1.8
+  yum: 
+    name: java-1.8.0-openjdk 
+    state: present
+
+- name: add group "tomcat"
+  group: 
+    name: tomcat
+
+- name: add user "tomcat"
+  user: 
+    name: tomcat 
+    group: tomcat 
+    home: /usr/share/tomcat 
+    createhome: no
+
+#  become: True
+#  become_method: sudo
+
+- name: Download Tomcat version {{ tomcat_version }} - check
+  get_url: 
+    url: "http://{{ software_repo_ip }}/tomcat/apache-tomcat-{{ tomcat_version }}.tar.gz" 
+    dest: "/opt/apache-tomcat-{{ tomcat_version }}.tar.gz"
+
+- name: Extract archive
+  command: "chdir=/usr/share /bin/tar xvf /opt/apache-tomcat-{{ tomcat_version }}.tar.gz -C /opt/ creates=/opt/apache-tomcat-{{ tomcat_version }}"
+
+- name: Symlink install directory
+  file: 
+    src: "/opt/apache-tomcat-{{ tomcat_version }}" 
+    path: /usr/share/tomcat 
+    state: link
+
+- name: Change ownership of Tomcat installation
+  file: 
+    path: /usr/share/tomcat/ 
+    owner: tomcat 
+    group: tomcat  
+    state: directory  
+    recurse: yes
+  changed_when: false
+
+- name: Configure Tomcat server
+  template: 
+    src:  templates/server.xml.j2 
+    dest: /usr/share/tomcat/conf/server.xml
+  notify: restart tomcat
+
+- name: Configure Tomcat users
+  template: 
+    src: templates/tomcat-users.xml.j2 
+    dest: /usr/share/tomcat/conf/tomcat-users.xml
+  notify: restart tomcat
+
+- name: Install the Tomcat Service
+  template:
+    src: templates/tomcat.service.j2 
+    dest: /etc/systemd/system/tomcat.service
+  notify: restart tomcat
+
+#- name: Install Tomcat init script
+#  copy: src={{filesdir}}/tomcat-8.5.9/tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
+ 
+#- name: Register Tomcat
+#  service: name=tomcat enabled=yes
+
+- name: Start Tomcat
+  service: 
+    name: tomcat 
+    state: started 
+    enabled: yes
+
+- name: deploy iptables rules
+  template: 
+    src: iptables-save 
+    dest: /etc/sysconfig/iptables
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6'"
+  notify: restart iptables
+
+- name: insert firewalld rule for tomcat http port
+  firewalld: 
+    port: "{{ http_port }}/tcp" 
+    permanent: true 
+    state: enabled 
+    immediate: yes
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+
+- name: insert firewalld rule for tomcat https port
+  firewalld: 
+    port: "{{ https_port }}/tcp" 
+    permanent: true 
+    state: enabled 
+    immediate: yes
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+
+- name: wait for tomcat to start
+  wait_for: 
+    port: "{{http_port}}"

@@ -1,0 +1,116 @@
+---
+
+###
+## Standard handlers for Linux / Unix systems
+#
+
+  - name: Reboot server
+    command: reboot
+    when: reboot|bool == true
+
+  - name: Rebuild grub.cfg
+    command: /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+    when: ansible_distribution_major_version|int >= 7
+
+  - name: Reload auditd
+    command: /sbin/augenrules --load
+    when: reboot|bool == false and ansible_distribution_major_version|int >= 6
+
+  - name: Reload systemd
+    command: /bin/systemctl daemon-reload
+    when: reboot|bool == false
+
+  - name: Reread email aliases
+    command: newaliases
+    when: reboot|bool == false
+
+  - name: Restart autofs
+    service: name=autofs enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart besclient
+    service: name=besclient enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart besrelay
+    service: name=besrelay enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart fprobe
+    service: name=fprobe enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart httpd
+    service: name=httpd enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Reread init
+    command: /sbin/init q
+    when: reboot|bool == false
+
+  - name: Restart cups
+    service: name=cups enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart nfslock
+    service: name=nfslock enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart ntp
+    service: name=ntpd enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart oswbb
+    service: name=oswbb enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart portmap
+    service: name=portmap enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart rpcbind
+    service: name=rpcbind enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart rpcidmapd
+    service: name=rpcidmapd enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart samba
+    service: name=smb enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart sendmail
+    service: name=sendmail enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart rsyslog
+    service: name=rsyslog enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart snmp
+    service: name=snmpd enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Restart sshd
+    service: name=sshd enabled=yes state=restarted sleep=5
+    when: reboot|bool == false
+
+  - name: Restart sysedge
+    service: name=sysedge enabled=yes state=restarted
+    when: reboot|bool == false
+
+  - name: Enable Networker
+    service: name=networker enabled=yes state=started
+    when: reboot|bool == false
+
+  - name: newaliases
+    command: /usr/bin/newaliases
+    when: reboot|bool == false
+
+  - name: restart tomcat
+    service: name=tomcat enabled=yes state=restarted
+
+  - name: restart iptables
+    service: name=iptables state=restarted
+

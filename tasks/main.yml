@@ -1,0 +1,31 @@
+---
+- name: os-specific vars called from rolename/vars
+  include_vars:  "{{ ansible_os_family }}.yml"
+  tags:
+      - always
+
+- name: Dump Variables
+  include: debug_vars.yml
+  tags:
+      - always
+
+- name: Gather the common variables
+  include: common-parameters.yml
+  tags:
+      - always
+
+- name: Add Tomcat to the servers
+  include: mw-tomcat.yml
+  tags:
+      - add_tomcat
+
+- name: Deploy War File to Tomcat Serveres
+  include: app-essential_project.yml
+  tags:
+      - war_deploy
+
+- name: Checking the Tomcat Web Server is running
+  include: web_test.yml
+  tags:
+      - web_test
+

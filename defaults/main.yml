@@ -1,0 +1,33 @@
+###
+## This is the variable file for the essential_project application
+#
+
+yum_release: 20160331
+
+# Here is the tomcat source and version
+software_repo_ip: 172.16.1.132
+
+tomcat_version: 8.5.9
+
+# Here are variables related to the Tomcat installation
+
+tomcat_jvm_min_memory: 512M
+tomcat_jvm_max_memory: 512M
+
+http_port: 8080
+https_port: 8443
+
+# This will configure a default manager-gui user:
+
+admin_username: admin
+admin_password: adminsecret
+
+# Source files for deployment
+warURL: "http://{{ software_repo_ip }}/essential_project"
+warName: essential_viewer.war
+warLocalPath: /usr/share/tomcat/webapps
+appPath: essential_viewer
+
+#
+webTest: enterprise-architecture
+

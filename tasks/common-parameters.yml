@@ -1,0 +1,16 @@
+---
+###
+## This file contains the path to gather and validate variables and parameters as well as set facts
+## It should be changed to your "rolename-parameters.yml" and the main updated to reflect that
+#
+
+# Fail messages take the form
+#- fail: msg="Some test variable cannot be blank"
+#  when: global_vari is not defined or global_vari == ''
+
+# Warning messages take the form
+#- debug: msg="Warning surrounding this setting - example it is recommended to set the parameter when X is defined"
+#  when: test_vari1 is not defined or testvari1 == ''
+
+# Setting facts takes the form - this is useful for reporting from the inventory - future
+#- set_fact: global_vari="{{ common_global_vari }}.test"

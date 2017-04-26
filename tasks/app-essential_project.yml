@@ -1,0 +1,5 @@
+---
+  - name: Download the WAR file to server
+    get_url:
+      url: "{{ warURL }}/{{ warName }}"
+      dest: "{{ warLocalPath }}/{{ warName }}"

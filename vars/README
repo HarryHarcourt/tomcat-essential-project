@@ -1,0 +1,5 @@
+# This is the vars directory, it contains all the base variables used by the role
+# The format is yaml, starting "---" 
+# Each variable after that should be in ini format "name: variable"
+# 
+# Name each "start" file main.yml

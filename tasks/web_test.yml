@@ -1,0 +1,19 @@
+---
+## This script simply checks if a website is available following a deployment
+#
+
+  - name: Pause for 10 seconds to deploy the Application
+    pause:
+      seconds: 10
+
+  - name: Checking the Tomcat Web Server is running
+    action: uri url='http://{{ ansible_host }}:{{ http_port }}/{{ appPath }}' return_content=yes
+    register: webpage
+    tags:
+        - tomcat_test
+
+  - name: Testing Application is running - will fail if not correct
+    fail: msg="WebPage is not running"
+    when: "'{{ webTest }}' not in webpage.content"
+    tags:
+        - ess_proj_test

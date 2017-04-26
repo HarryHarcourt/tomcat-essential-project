@@ -1,0 +1,9 @@
+---
+###
+## This file prints out the variables attached to a host (I hope)
+#
+
+  - name: Print out the variables attached to a host
+    debug: var=hostvars[inventory_hostname]
+    when: show_vari_dump == True
+

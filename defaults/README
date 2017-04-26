@@ -1,0 +1,5 @@
+# This is the defaults directory
+# It contains all the default variable that one is going to need for the role in simple yaml format it seems
+# Thus "---" on the first line
+# All further variable are "name: variable" on lines after that
+# 

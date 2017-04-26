@@ -1,0 +1,4 @@
+This is the templates directory
+All templates should be put in there with the .j2 extension
+Any variables can be included in the template file simply using {{ variable }}
+Note there is the possiblity of using if or and else statements in the template files following jinja convention
